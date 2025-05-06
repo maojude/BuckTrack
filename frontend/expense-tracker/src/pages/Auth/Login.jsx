@@ -3,7 +3,7 @@ import AuthLayout from '../../components/layouts/AuthLayout'
 import { useNavigate } from 'react-router-dom';
 import Input from "../../components/Inputs/Input";
 import { Link } from 'react-router-dom';
-//import { validateEmail } from '../../utils/helper'; 
+import { validateEmail } from '../../utils/helper'; 
 //import { API_PATHS, BASE_URL } from '../../utils/apiPaths';
 //import axiosInstance from '../../utils/axiosInstance';
 //import { UserContext } from '../../context/UserContext';
@@ -15,8 +15,23 @@ const Login = () => {
     
     const navigate = useNavigate();
 
+      // Handle Login Form Submit 
     const handleLogin = async (e) => {
+        e.preventDefault(); //prevent default form submission (refreshing the page)
 
+        if(!validateEmail(email)){
+          setError("Please enter a valid email address.");
+          return; 
+        }
+    
+        if(!password){
+          setError("Please enter your password.");
+          return;   
+        }
+    
+        setError("");
+
+        // Login API call
     };
 
     return(
