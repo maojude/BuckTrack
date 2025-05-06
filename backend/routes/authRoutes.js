@@ -1,4 +1,5 @@
 const express = require('express');
+const { protext } = require("../middleware/authMiddleware");
 
 const{
     registerUser,
