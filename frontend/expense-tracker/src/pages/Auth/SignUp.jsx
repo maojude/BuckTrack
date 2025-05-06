@@ -16,7 +16,31 @@ const SignUp = () => {
   const navigate = useNavigate();
 
   const handleSignUp = async (e) => {
+    e.preventDefault(); //prevent default form submission (refreshing the page)
 
+    if(!fullName){
+      setError("Please enter your full name.");
+      return; 
+    }
+
+    if(!validateEmail(email)){
+      setError("Please enter a valid email address.");
+      return; 
+    }
+
+    if(!password){
+      setError("Please enter the password.");
+      return; 
+    }
+
+    if(password.length < 8){  
+      setError("Password must be at least 8 characters long.");
+      return;
+    }
+
+    setError("");
+
+    //Sign Up API call
   };
 
 
