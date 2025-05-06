@@ -36,10 +36,15 @@ const Root = () => {
   // Check if token exists in local storage
   const isAuthenticated = !!localStorage.getItem('token');
 
+  // for testing
+  console.log("token:", localStorage.getItem('token'), "authenticated?", isAuthenticated);
+
   // Redirect to dashboard if authenticated, otherwise redirect to login
   return isAuthenticated ? (
     <Navigate to="/dashboard" />
   ) : (
     <Navigate to="/login" />
   );
+
+
 };
