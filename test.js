@@ -1,1 +1,2 @@
-console.log("testt1")
+console.log("testt1");
+console
