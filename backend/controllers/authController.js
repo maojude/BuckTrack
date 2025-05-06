@@ -83,4 +83,17 @@ exports.loginUser = async (req, res) => {
 
 // Get User Info
 exports.getUserInfo = async (req, res) => {
+    try{
+        const user = await User.findById(req.user.id).select('-password'); // Exclude password from response
+        if(!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        
+        res.status(200).json(user); // responds by sending status 200 which means OK then sends the user data
+
+    } catch (error) {
+        res
+            .status(500)
+            .json({ message: "Error fetching user info", error: error.message });
+    }
 };
