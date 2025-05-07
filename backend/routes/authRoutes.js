@@ -17,6 +17,9 @@ router.post('/login', loginUser);
 
 router.get('/getUser', protect, getUserInfo);
 
+// router to google auth
+router.post('/google-login', googleLogin);
+
 
 module.exports = router;
 // This code defines the routes for user authentication in an Express application. 
