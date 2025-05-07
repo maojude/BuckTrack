@@ -6,12 +6,14 @@ import { Link } from 'react-router-dom';
 import { validateEmail } from '../../utils/helper'; 
 import { API_PATHS, BASE_URL } from '../../utils/apiPaths';
 import axiosInstance from '../../utils/axiosInstance';
-//import { UserContext } from '../../context/UserContext';
+import { UserContext } from "../../context/userContext";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
+
+    const { updateUser } = useContext(UserContext); // to update user data in context
     
     const navigate = useNavigate();
 
@@ -42,7 +44,7 @@ const Login = () => {
     
           if ( token ) {
             localStorage.setItem("token", token); // store the token in local storage
-            updateUser(user);
+            updateUser(user); // update user data in context
             navigate("/dashboard"); // redirect to dashboard
           }
         } catch (error) {
