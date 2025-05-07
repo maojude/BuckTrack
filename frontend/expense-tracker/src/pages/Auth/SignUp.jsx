@@ -16,7 +16,7 @@ const SignUp = () => {
   
   const [error, setError] = useState(null);
 
-  const { updateUser } = useContext(UserContext); // to update user data in context
+  const { updateUser } = useContext(UserContext); // to use update user data using context
   const navigate = useNavigate();
 
   const handleSignUp = async (e) => {
@@ -124,6 +124,6 @@ const SignUp = () => {
       </div>
     </AuthLayout>
   )
-}
+};
 
-export default SignUp
+export default SignUp;
