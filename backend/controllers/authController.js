@@ -97,3 +97,37 @@ exports.getUserInfo = async (req, res) => {
             .json({ message: "Error fetching user info", error: error.message });
     }
 };
+
+
+exports.googleLogin = async (req,res) => {
+    const { idToken } = req.body;
+
+    try{
+        const decodedToken = await auth().verifyIdToken(idToken);
+        const { uid, name, email } = decodedToken;
+
+        // look for existing user
+        let user = await User.findOne({ email });
+
+        if(user && user.provider === "local"){
+            return res.status(400).json({ message: "This email is already registered with password login" });
+        }
+
+        // if new user
+        if(!user) {
+            user = await User.create({
+                fullName: name,
+                email,
+                provider: "google",
+            });
+        }
+
+        res.status(200).json({
+            id: user._id,
+            user,
+            token: generateToken(user._id),
+        });
+    } catch (error) {
+        res.status(401).json({ message: "Invalid Firebase token", error: error.message });
+    }
+};
