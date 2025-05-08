@@ -60,14 +60,23 @@ exports.loginUser = async (req, res) => {
         //Check if user exists
         const user = await User.findOne({ email });
 
-        if(!user || !(await user.comparePassword(password))) {
+        if(!user) {
             //Check if user exists and password matches
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
-        if (!user || user.provider === "google" || !(await user.comparePassword(password))) {
-            return res.status(400).json({ message: 'Invalid credentials or wrong login method' });
+        //check if user is using google login
+        if(user.provider === "google") {
+            return res.status(400).json({ message: 'This account uses Google Login' });
         }
+
+        // Check if password matches
+        const isMatch = await user.comparePassword(password); //compare password using the method defined in User model
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
+
+        //Generate JWT token and send response
 
         res.status(200).json({
             id: user._id,

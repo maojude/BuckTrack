@@ -94,7 +94,12 @@ const Login = () => {
 
       } catch (error) {
         console.error("Google sign-in failed:", error);
-        setError("Google login failed. Please try again.");
+        
+        if (error.response && error.response.data.message) {
+          setError(error.response.data.message); // This shows your custom backend message
+        } else {
+          setError("Google login failed. Please try again.");
+        }
       }
     };
 
