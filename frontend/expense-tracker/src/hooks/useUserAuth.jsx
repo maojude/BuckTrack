@@ -5,7 +5,7 @@ import { UserContext } from "../context/userContext";
 import { API_PATHS } from "../utils/apiPaths";
 import axiosInstance from "../utils/axiosInstance";
 
-// to automatically fetch and manage logged in user's data when app loads or refreshes
+// to fetch and manage logged in user's data when app loads or refreshes
 export const useUserAuth = () => {
     const { user, updateUser, clearUser } = useContext(UserContext);
     const navigate = useNavigate();
