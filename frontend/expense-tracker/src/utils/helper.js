@@ -13,3 +13,14 @@ export const addThousandsSeparator = (num) => {
 
     return fractionalPart ? `${formattedIntegerPart}.${fractionalPart}` : formattedIntegerPart;
 };
+
+//data = [] is a default parameter, if no data is passed, it will be an empty array
+//Function loops through the data array and returns a new array of objects with category and amount properties
+export const prepareExpenseBarChartData = (data = []) => {
+    const chartData = data.map((item) => ({
+        category: item?.category,
+        amount: item?.amount,
+    }));
+
+    return chartData;
+};
