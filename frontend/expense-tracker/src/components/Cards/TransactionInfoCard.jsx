@@ -7,7 +7,7 @@ import {
 } from "react-icons/lu";
 
 const TransactionInfoCard = ({ title, icon, date, amount, type, hideDeleteBtn }) => {
-    
+
     const getAmountStyles = () => 
         type === "income" ? "bg-green-50 text-green-500" : "bg-red-50 text-red-500";
     
@@ -40,7 +40,7 @@ const TransactionInfoCard = ({ title, icon, date, amount, type, hideDeleteBtn })
                 className={`flex items-center gap2 px-3 py-1.5 rounded-md ${getAmountStyles()}`}
             >
                 <h6 className="text-xs font-medium ">
-                    {type === "income" ? "+" : "-"} ${amount}
+                    {type === "income" ? "+" : "-"} ₱{amount}
                 </h6>
                 {type === "income" ? <LuTrendingUp/> : <LuTrendingDown />}
             </div>
