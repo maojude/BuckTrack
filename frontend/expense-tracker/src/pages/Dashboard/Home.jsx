@@ -25,6 +25,8 @@ const Home = () => {
   const [ loading, setLoading ] = useState(false);
   
   const fetchDashboardData = async () => {
+    // Loading prevents multiple API calls, e.g., when the user
+    //  refreshes page while first fetch is still loading
     if (loading) return;
 
     setLoading(true);
@@ -39,11 +41,12 @@ const Home = () => {
       }
     } catch (error) {
       console.log("Something went wrong. Please try again.", error);
-    } finally {
+    } finally { // runs whether the try block succeeds or fails
       setLoading(false);
     }
   };
 
+  // Runs only once after component mounts 
   useEffect(() => {
     fetchDashboardData();
   
