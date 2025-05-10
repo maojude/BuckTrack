@@ -14,8 +14,6 @@ exports.getDashboardData = async (req, res) => {
             { $group: { _id: null, total: { $sum: "$amount" } } }, //using null to group all documents together
         ]);
 
-        console.log("totalIncome", {totalIncome, userId: isValidObjectId(userId)});
-
         const totalExpense = await Expense.aggregate([
             { $match: { userId: userObjectId } }, // match userId
             { $group: { _id: null, total: { $sum: "$amount" } } }, //using null to group all documents together
