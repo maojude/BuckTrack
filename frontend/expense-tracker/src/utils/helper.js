@@ -1,3 +1,5 @@
+import moment from "moment";
+
 //email validation function pattern from https://www.geeksforgeeks.org/javascript-program-to-validate-an-email-address/
 
 export const validateEmail = (email) => {
@@ -20,6 +22,21 @@ export const prepareExpenseBarChartData = (data = []) => {
     const chartData = data.map((item) => ({
         category: item?.category,
         amount: item?.amount,
+    }));
+
+    return chartData;
+};
+
+export const prepareIncomeBarChartData = (data = []) => {
+    // [...data] creates a shallow copy of the data array
+    // which avoids mutating the original data array
+    // sorts the data array by date in ascending order
+    const sortedData = [...data].sort((a,b) => new Date(a.date) - new Date(b.date));
+
+    const chartData = sortedData.map((item) => ({
+        month: moment(item?.date).format("Do MMM"),
+        amount: item?.amount,
+        source: item?.source,
     }));
 
     return chartData;
