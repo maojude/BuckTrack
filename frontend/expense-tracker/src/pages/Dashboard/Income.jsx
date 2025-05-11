@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import DashboardLayout from '../../components/layouts/DashboardLayout';
 import IncomeOverview from '../../components/Income/IncomeOverview';
 import { API_PATHS } from '../../utils/apiPaths';
 import axiosInstance from '../../utils/axiosInstance';
 import Modal from '../../components/layouts/Modal';
 import AddIncomeForm from '../../components/Income/AddIncomeForm';
+import { toast } from 'react-hot-toast';
+import IncomeList from '../../components/Income/IncomeList';
 
 
 const Income = () => {
+
 
   const [incomeData, setIncomeData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -42,16 +45,49 @@ const Income = () => {
   };
 
   // Handle Add Income
-  const handleAddIncome = async (income) => {};
+  // toast is used to show small pop up messages to user
+  const handleAddIncome = async (income) => {
+    const { source, amount, date, icon } = income;
+
+    //Validation checks
+    // trim removes whitespaces from both ends of a string
+    if (!source.trim()) {
+      toast.error("Source is required");
+      return;
+    }
+
+    if (!amount || isNaN(amount) || Number(amount) <= 0) {
+      toast.error("Amount should be a valid number greater than 0.");
+      return;
+    }
+    
+    try {
+      await axiosInstance.post(API_PATHS.INCOME.ADD_INCOME,{
+        source,
+        amount, 
+        date,
+        icon,
+      });
+
+      setOpenAddIncomeModal(false);
+      toast.success("Income added successfully");
+      fetchIncomeDetails();
+    } catch (error) {
+      console.error(
+        "Error adding income:",
+        error.response?.data?.message || error.message
+      );
+    }
+  };
 
   // Delete Income
   const deleteIncome = async (id) => {};
 
   useEffect(() => {
-    fetchIncomeDetails();
-
+    
+      fetchIncomeDetails();
+    
     return () => {
-
     }
   }, []);
 
@@ -60,12 +96,20 @@ const Income = () => {
       <div className="my-5 mx-auto">
         <div className="grid grid-cols-1 gap-6">
           <div className="">
+
             <IncomeOverview
               transactions={incomeData}
               // send function to open modal
               onAddIncome={() => setOpenAddIncomeModal(true)}
             />
           </div>
+
+          <IncomeList
+            transactions={incomeData}
+            onDelete={(id) => {
+              setOpenDeleteAlert({ show: true, data: id });
+            }}
+          />
         </div>
 
 
@@ -83,3 +127,5 @@ const Income = () => {
 };
 
 export default Income;
+
+//3:35
