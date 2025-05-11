@@ -17,8 +17,6 @@ import { LuHandCoins, LuWalletMinimal } from 'react-icons/lu';
 import { IoMdCard } from 'react-icons/io';
 
 const Home = () => {
-  useUserAuth();
-
   const navigate = useNavigate();
 
   const [ dashboardData, setDashboardData ] = useState(null);
