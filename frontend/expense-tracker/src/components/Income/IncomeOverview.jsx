@@ -23,6 +23,7 @@ const IncomeOverview = ({transactions, onAddIncome}) => {
             </p>
         </div>
 
+        {/* when button is clicked, it will run the function that is passed to it */}
         <button className="add-btn" onClick={onAddIncome}>
             <LuPlus className="text-lg" />
             Add Income
