@@ -4,6 +4,8 @@ import IncomeOverview from '../../components/Income/IncomeOverview';
 import { API_PATHS } from '../../utils/apiPaths';
 import axiosInstance from '../../utils/axiosInstance';
 import Modal from '../../components/layouts/Modal';
+import AddIncomeForm from '../../components/Income/AddIncomeForm';
+
 
 const Income = () => {
 
@@ -14,7 +16,8 @@ const Income = () => {
     data: null,
   });
 
-  const [openAddIncomeModal, setOpenAddIncomeModal] = useState(true);
+  // to check if modal windows is open or not, initially set to false
+  const [openAddIncomeModal, setOpenAddIncomeModal] = useState(false);
 
 
   // Get  all Income Details
@@ -59,17 +62,20 @@ const Income = () => {
           <div className="">
             <IncomeOverview
               transactions={incomeData}
+              // send function to open modal
               onAddIncome={() => setOpenAddIncomeModal(true)}
             />
           </div>
         </div>
+
 
         <Modal
           isOpen={openAddIncomeModal}
           onClose={() => setOpenAddIncomeModal(false)}
           title="Add Income"
         >
-          <div>Add Income Form</div>
+          {/* when button is clicked, it will run the function that is passed to it */}
+          <AddIncomeForm onAddIncome={handleAddIncome} />
         </Modal>
       </div>
     </DashboardLayout>
