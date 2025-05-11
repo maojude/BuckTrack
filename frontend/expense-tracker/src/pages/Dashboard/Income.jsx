@@ -7,10 +7,10 @@ import Modal from '../../components/layouts/Modal';
 import AddIncomeForm from '../../components/Income/AddIncomeForm';
 import { toast } from 'react-hot-toast';
 import IncomeList from '../../components/Income/IncomeList';
+import DeleteAlert from '../../components/layouts/DeleteAlert';
 
 
 const Income = () => {
-
 
   const [incomeData, setIncomeData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -81,7 +81,21 @@ const Income = () => {
   };
 
   // Delete Income
-  const deleteIncome = async (id) => {};
+  const deleteIncome = async (id) => {
+    try {
+      await axiosInstance.delete(API_PATHS.INCOME.DELETE_INCOME(id));
+
+      setOpenDeleteAlert({ show: false, data: null });
+      toast.success("Income deleted successfully");
+      fetchIncomeDetails();
+    } catch (error) {
+      console.error(
+        "Error deleting income:",
+        error.response?.data?.message || error.message
+      );
+      toast.error("Error deleting income");
+    }
+  };
 
   useEffect(() => {
     
@@ -112,7 +126,7 @@ const Income = () => {
           />
         </div>
 
-
+        {/* Modal for Add Income */}
         <Modal
           isOpen={openAddIncomeModal}
           onClose={() => setOpenAddIncomeModal(false)}
@@ -120,6 +134,18 @@ const Income = () => {
         >
           {/* when button is clicked, it will run the function that is passed to it */}
           <AddIncomeForm onAddIncome={handleAddIncome} />
+        </Modal>
+          
+        {/* Modal for Delete Income */}
+        <Modal
+          isOpen={openDeleteAlert.show}
+          onClose={() => setOpenDeleteAlert({ show: false, data: null })}
+          title="Delete Income"
+        >
+          <DeleteAlert 
+            content="Are you sure you want to delete this income?"
+            onDelete={() => deleteIncome(openDeleteAlert.data)}
+          />
         </Modal>
       </div>
     </DashboardLayout>
