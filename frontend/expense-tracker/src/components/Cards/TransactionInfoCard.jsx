@@ -6,9 +6,9 @@ import {
     LuTrash2,
 } from "react-icons/lu";
 
-const TransactionInfoCard = ({ title, icon, date, amount, type, hideDeleteBtn }) => {
+const TransactionInfoCard = ({ title, icon, date, amount, type, hideDeleteBtn, onDelete }) => {
 
-    const getAmountStyles = () => 
+    const getAmountStyles = () =>
         type === "income" ? "bg-green-50 text-green-500" : "bg-red-50 text-red-500";
     
   return (
