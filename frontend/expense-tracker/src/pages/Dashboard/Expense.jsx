@@ -17,6 +17,12 @@ const Expense = () => {
     data: null,
   });
 
+  // state to manage the edit alert modal
+  const [openEditAlert, setOpenEditAlert] = useState({
+    show: false,
+    data: null,
+  });
+
   // to check if modal windows is open or not, initially set to false
   const [openAddExpenseModal, setOpenAddExpenseModal] = useState(false);
 
@@ -98,6 +104,44 @@ const Expense = () => {
     }
   };
 
+  const handleEditExpense = async (expense) => {
+    // destructure the expense object to get the values
+    const { _id, category, amount, date, icon } = expense;
+
+    //Validation checks
+    // trim removes whitespaces from both ends of a string
+    if (!category.trim()) {
+      toast.error("Category is required");
+      return;
+    }
+
+    if (!amount || isNaN(amount) || Number(amount) <= 0) {
+      toast.error("Amount should be a valid number greater than 0.");
+      return;
+    }
+
+    if (!date) {
+      toast.error("Date is required");
+      return;
+    }
+
+    try {
+      await axiosInstance.put(API_PATHS.EXPENSE.UPDATE_EXPENSE(_id), {
+        category,
+        amount,
+        date,
+        icon,
+      });
+
+      toast.success("Expense updated successfully");
+      setOpenEditAlert({ show: false, data: null }); // close modal
+      fetchExpenseDetails(); // refresh the list
+    } catch (error) {
+      console.error("Error updating expense:", error);
+      toast.error("Error updating expense");
+    }
+  };
+
   useEffect(() => {
     fetchExpenseDetails();
 
@@ -119,10 +163,13 @@ const Expense = () => {
           onDelete={(id) => {
             setOpenDeleteAlert({ show: true, data: id });
           }}
+          onEdit={(id) => {
+            setOpenEditAlert({ show: true, data: id });
+          }}
         />
       </div>
 
-      {/* Modal for Delete Income */}
+      {/* Modal for Add Expense */}
       <Modal
         isOpen={openAddExpenseModal}
         onClose={() => setOpenAddExpenseModal(false)}
@@ -131,7 +178,7 @@ const Expense = () => {
         <AddExpenseForm onAddExpense={handleAddExpense} />
       </Modal>
 
-      {/* Modal for Delete Income */}
+      {/* Modal for Delete Expense */}
       <Modal
         isOpen={openDeleteAlert.show}
         onClose={() => setOpenDeleteAlert({ show: false, data: null })}
@@ -140,6 +187,20 @@ const Expense = () => {
         <DeleteAlert
           content="Are you sure you want to delete this expense?"
           onDelete={() => deleteExpense(openDeleteAlert.data)}
+        />
+      </Modal>
+
+      {/* Modal for Edit Expense */}
+      <Modal
+        isOpen={openEditAlert.show}
+        onClose={() => setOpenEditAlert({ show: false, data: null })}
+        title="Edit Expense"
+      >
+        <AddExpenseForm
+          onAddExpense={handleEditExpense}
+          initialData={expenseData.find(
+            (item) => item._id === openEditAlert.data
+          )}
         />
       </Modal>
     </DashboardLayout>

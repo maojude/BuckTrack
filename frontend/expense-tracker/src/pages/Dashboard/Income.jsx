@@ -17,6 +17,12 @@ const Income = () => {
     data: null,
   });
 
+  // state to manage the edit alert modal
+  const [openEditAlert, setOpenEditAlert] = useState({
+    show: false,
+    data: null,
+  });
+
   // to check if modal windows is open or not, initially set to false
   const [openAddIncomeModal, setOpenAddIncomeModal] = useState(false);
 
@@ -99,6 +105,44 @@ const Income = () => {
     }
   };
 
+  const handleEditIncome = async (income) => {
+    // destructure the income object to get the values
+    const { _id, source, amount, date, icon } = income;
+
+    //Validation checks
+    // trim removes whitespaces from both ends of a string
+    if (!source.trim()) {
+      toast.error("Source is required");
+      return;
+    }
+
+    if (!amount || isNaN(amount) || Number(amount) <= 0) {
+      toast.error("Amount should be a valid number greater than 0.");
+      return;
+    }
+
+    if (!date) {
+      toast.error("Date is required");
+      return;
+    }
+
+    try {
+      await axiosInstance.put(API_PATHS.INCOME.UPDATE_INCOME(_id), {
+        source,
+        amount,
+        date,
+        icon,
+      });
+
+      toast.success("Income updated successfully");
+      setOpenEditAlert({ show: false, data: null }); // close modal
+      fetchIncomeDetails(); // refresh the list
+    } catch (error) {
+      console.error("Error updating income:", error);
+      toast.error("Error updating income");
+    }
+  };
+
   useEffect(() => {
     fetchIncomeDetails();
 
@@ -122,6 +166,9 @@ const Income = () => {
             onDelete={(id) => {
               setOpenDeleteAlert({ show: true, data: id });
             }}
+            onEdit={(id) => {
+              setOpenEditAlert({ show: true, data: id });
+            }}
           />
         </div>
 
@@ -144,6 +191,20 @@ const Income = () => {
           <DeleteAlert
             content="Are you sure you want to delete this income?"
             onDelete={() => deleteIncome(openDeleteAlert.data)}
+          />
+        </Modal>
+
+        {/* Modal for Edit Income */}
+        <Modal
+          isOpen={openEditAlert.show}
+          onClose={() => setOpenEditAlert({ show: false, data: null })}
+          title="Edit Income"
+        >
+          <AddIncomeForm
+            onAddIncome={handleEditIncome}
+            initialData={incomeData.find(
+              (item) => item._id === openEditAlert.data
+            )}
           />
         </Modal>
       </div>
