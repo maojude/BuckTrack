@@ -1,17 +1,15 @@
-import React, { useState, useEffect, useContext } from 'react'
-import DashboardLayout from '../../components/layouts/DashboardLayout';
-import IncomeOverview from '../../components/Income/IncomeOverview';
-import { API_PATHS } from '../../utils/apiPaths';
-import axiosInstance from '../../utils/axiosInstance';
-import Modal from '../../components/layouts/Modal';
-import AddIncomeForm from '../../components/Income/AddIncomeForm';
-import { toast } from 'react-hot-toast';
-import IncomeList from '../../components/Income/IncomeList';
-import DeleteAlert from '../../components/layouts/DeleteAlert';
-
+import React, { useState, useEffect, useContext } from "react";
+import DashboardLayout from "../../components/layouts/DashboardLayout";
+import IncomeOverview from "../../components/Income/IncomeOverview";
+import { API_PATHS } from "../../utils/apiPaths";
+import axiosInstance from "../../utils/axiosInstance";
+import Modal from "../../components/layouts/Modal";
+import AddIncomeForm from "../../components/Income/AddIncomeForm";
+import { toast } from "react-hot-toast";
+import IncomeList from "../../components/Income/IncomeList";
+import DeleteAlert from "../../components/layouts/DeleteAlert";
 
 const Income = () => {
-
   const [incomeData, setIncomeData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [openDeleteAlert, setOpenDeleteAlert] = useState({
@@ -22,14 +20,13 @@ const Income = () => {
   // to check if modal windows is open or not, initially set to false
   const [openAddIncomeModal, setOpenAddIncomeModal] = useState(false);
 
-
   // Get  all Income Details
-  const fetchIncomeDetails = async() => {
+  const fetchIncomeDetails = async () => {
     if (loading) return;
 
     setLoading(true);
 
-    try{
+    try {
       const response = await axiosInstance.get(
         `${API_PATHS.INCOME.GET_ALL_INCOME}`
       );
@@ -40,7 +37,7 @@ const Income = () => {
     } catch (error) {
       console.log("Something went wrong. Please try again.", error);
     } finally {
-      setLoading (false);
+      setLoading(false);
     }
   };
 
@@ -60,16 +57,16 @@ const Income = () => {
       toast.error("Amount should be a valid number greater than 0.");
       return;
     }
-    
+
     if (!date) {
       toast.error("Date is required");
       return;
     }
-    
+
     try {
-      await axiosInstance.post(API_PATHS.INCOME.ADD_INCOME,{
+      await axiosInstance.post(API_PATHS.INCOME.ADD_INCOME, {
         source,
-        amount, 
+        amount,
         date,
         icon,
       });
@@ -103,11 +100,9 @@ const Income = () => {
   };
 
   useEffect(() => {
-    
-      fetchIncomeDetails();
-    
-    return () => {
-    }
+    fetchIncomeDetails();
+
+    return () => {};
   }, []);
 
   return (
@@ -115,7 +110,6 @@ const Income = () => {
       <div className="my-5 mx-auto">
         <div className="grid grid-cols-1 gap-6">
           <div className="">
-
             <IncomeOverview
               transactions={incomeData}
               // send function to open modal
@@ -140,14 +134,14 @@ const Income = () => {
           {/* when button is clicked, it will run the function that is passed to it */}
           <AddIncomeForm onAddIncome={handleAddIncome} />
         </Modal>
-          
+
         {/* Modal for Delete Income */}
         <Modal
           isOpen={openDeleteAlert.show}
           onClose={() => setOpenDeleteAlert({ show: false, data: null })}
           title="Delete Income"
         >
-          <DeleteAlert 
+          <DeleteAlert
             content="Are you sure you want to delete this income?"
             onDelete={() => deleteIncome(openDeleteAlert.data)}
           />
@@ -158,5 +152,3 @@ const Income = () => {
 };
 
 export default Income;
-
-//3:35
