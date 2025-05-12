@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import DashboardLayout from '../../components/layouts/DashboardLayout';
-import { API_PATHS } from '../../utils/apiPaths';
-import toast from 'react-hot-toast';
-import axiosInstance from '../../utils/axiosInstance'
-import ExpenseOverview from '../../components/Expense/ExpenseOverview';
-
+import React, { useState, useEffect } from "react";
+import DashboardLayout from "../../components/layouts/DashboardLayout";
+import { API_PATHS } from "../../utils/apiPaths";
+import toast from "react-hot-toast";
+import axiosInstance from "../../utils/axiosInstance";
+import ExpenseOverview from "../../components/Expense/ExpenseOverview";
+import AddExpenseForm from "../../components/Expense/AddExpenseForm";
+import Modal from "../../components/layouts/Modal";
 
 const Expense = () => {
   const [expenseData, setExpenseData] = useState([]);
@@ -13,17 +14,17 @@ const Expense = () => {
     show: false,
     data: null,
   });
-  
+
   // to check if modal windows is open or not, initially set to false
   const [openAddExpenseModal, setOpenAddExpenseModal] = useState(false);
-  
-   // Get  all Expense Details
-  const fetchExpenseDetails = async() => {
+
+  // Get  all Expense Details
+  const fetchExpenseDetails = async () => {
     if (loading) return;
 
     setLoading(true);
 
-    try{
+    try {
       const response = await axiosInstance.get(
         `${API_PATHS.EXPENSE.GET_ALL_EXPENSE}`
       );
@@ -34,7 +35,7 @@ const Expense = () => {
     } catch (error) {
       console.log("Something went wrong. Please try again.", error);
     } finally {
-      setLoading (false);
+      setLoading(false);
     }
   };
 
@@ -58,9 +59,9 @@ const Expense = () => {
       toast.error("Date is required");
       return;
     }
-    
+
     try {
-      await axiosInstance.post(API_PATHS.EXPENSE.ADD_EXPENSE,{
+      await axiosInstance.post(API_PATHS.EXPENSE.ADD_EXPENSE, {
         category,
         amount,
         date,
@@ -84,7 +85,6 @@ const Expense = () => {
     return () => {};
   }, []);
   return (
-    
     <DashboardLayout activeMenu="Expense">
       <div className="my-5 mx-auto">
         <div className="grid grid-cols-1 gap-6">
@@ -94,8 +94,16 @@ const Expense = () => {
           />
         </div>
       </div>
-    </DashboardLayout>
-  )
-}
 
-export default Expense
+      <Modal
+        isOpen={openAddExpenseModal}
+        onClose={() => setOpenAddExpenseModal(false)}
+        title="Add Expense"
+      >
+        <AddExpenseForm onAddExpense={handleAddExpense} />
+      </Modal>
+    </DashboardLayout>
+  );
+};
+
+export default Expense;
