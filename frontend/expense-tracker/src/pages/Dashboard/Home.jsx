@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from 'react'
-import DashboardLayout from '../../components/layouts/DashboardLayout';
-import { useUserAuth } from '../../hooks/useUserAuth';
-import axiosInstance from '../../utils/axiosInstance';
-import { API_PATHS } from '../../utils/apiPaths';
-import { useNavigate } from 'react-router-dom';
-import { addThousandsSeparator } from '../../utils/helper';
-import InfoCard from '../../components/Cards/InfoCard';
-import RecentTransactions from '../../components/Dashboard/RecentTransactions';
-import FinanceOverview from '../../components/Dashboard/FinanceOverview';
-import ExpenseTransactions from '../../components/Dashboard/ExpenseTransactions';
-import Last30DaysExpenses from '../../components/Dashboard/Last30DaysExpenses';
-import RecentIncomeWithChart from '../../components/Dashboard/RecentIncomeWithChart';
-import RecentIncome from '../../components/Dashboard/RecentIncome';
+import React, { useState, useEffect } from "react";
+import DashboardLayout from "../../components/layouts/DashboardLayout";
+import { useUserAuth } from "../../hooks/useUserAuth";
+import axiosInstance from "../../utils/axiosInstance";
+import { API_PATHS } from "../../utils/apiPaths";
+import { useNavigate } from "react-router-dom";
+import { addThousandsSeparator } from "../../utils/helper";
+import InfoCard from "../../components/Cards/InfoCard";
+import RecentTransactions from "../../components/Dashboard/RecentTransactions";
+import FinanceOverview from "../../components/Dashboard/FinanceOverview";
+import ExpenseTransactions from "../../components/Dashboard/ExpenseTransactions";
+import Last30DaysExpenses from "../../components/Dashboard/Last30DaysExpenses";
+import RecentIncomeWithChart from "../../components/Dashboard/RecentIncomeWithChart";
+import RecentIncome from "../../components/Dashboard/RecentIncome";
 
-import { LuHandCoins, LuWalletMinimal } from 'react-icons/lu';
-import { IoMdCard } from 'react-icons/io';
+import { LuHandCoins, LuWalletMinimal } from "react-icons/lu";
+import { IoMdCard } from "react-icons/io";
 
 const Home = () => {
   const navigate = useNavigate();
 
-  const [ dashboardData, setDashboardData ] = useState(null);
-  const [ loading, setLoading ] = useState(false);
-  
+  const [dashboardData, setDashboardData] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   const fetchDashboardData = async () => {
     // Loading prevents multiple API calls, e.g., when the user
     //  refreshes page while first fetch is still loading
@@ -29,7 +29,7 @@ const Home = () => {
 
     setLoading(true);
 
-    try{
+    try {
       const response = await axiosInstance.get(
         `${API_PATHS.DASHBOARD.GET_DATA}`
       );
@@ -39,18 +39,18 @@ const Home = () => {
       }
     } catch (error) {
       console.log("Something went wrong. Please try again.", error);
-    } finally { // runs whether the try block succeeds or fails
+    } finally {
+      // runs whether the try block succeeds or fails
       setLoading(false);
     }
   };
 
-  // Runs only once after component mounts 
+  // Runs only once after component mounts
   useEffect(() => {
     fetchDashboardData();
-  
-    return () => {}
+
+    return () => {};
   }, []);
-  
 
   return (
     <DashboardLayout activeMenu="Dashboard">
@@ -73,7 +73,7 @@ const Home = () => {
           <InfoCard
             icon={<LuHandCoins />}
             label="Total Expense"
-            value={addThousandsSeparator(dashboardData?.totalExpense|| 0)}
+            value={addThousandsSeparator(dashboardData?.totalExpense || 0)}
             color="bg-red-500"
           />
         </div>
@@ -94,21 +94,22 @@ const Home = () => {
             transactions={dashboardData?.last30DaysExpenses?.transactions || []}
             onSeeMore={() => navigate("/expense")}
           />
-          
+
           <Last30DaysExpenses
             data={dashboardData?.last30DaysExpenses?.transactions || []}
           />
 
           <RecentIncomeWithChart
-            data={dashboardData?.last30DaysIncome?.transactions?.slice(0,4) || []}
+            data={
+              dashboardData?.last60DaysIncome?.transactions?.slice(0, 4) || []
+            }
             totalIncome={dashboardData?.totalIncome || 0}
           />
 
           <RecentIncome
-            transactions={dashboardData?.last30DaysIncome?.transactions || []}
+            transactions={dashboardData?.last60DaysIncome?.transactions || []}
             onSeeMore={() => navigate("/income")}
           />
-
         </div>
       </div>
     </DashboardLayout>
@@ -116,4 +117,3 @@ const Home = () => {
 };
 
 export default Home;
-
