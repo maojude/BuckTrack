@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import Input from "../Inputs/Input";
 import EmojiPickerPopup from "../layouts/EmojiPickerPopup";
 
-const AddExpenseForm = ({ onAddExpense }) => {
+const AddExpenseForm = ({ onAddExpense, initialData = null }) => {
   const [expense, setExpense] = useState({
-    category: "",
-    amount: "",
-    date: "",
-    icon: "",
+    category: initialData?.category || "",
+    amount: initialData?.amount || "",
+    date: initialData?.date ? initialData.date.slice(0, 10) : "",
+    icon: initialData?.icon || "",
+    _id: initialData?._id || "",
   });
 
   // Since react is used, the expense state is copied and the specified key is updated with
@@ -51,7 +52,7 @@ const AddExpenseForm = ({ onAddExpense }) => {
           className="add-btn add-btn-fill "
           onClick={() => onAddExpense(expense)}
         >
-          Add Expense
+          {initialData ? "Update" : "Add"} Expense
         </button>
       </div>
     </div>
