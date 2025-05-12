@@ -61,6 +61,11 @@ const Income = () => {
       return;
     }
     
+    if (!date) {
+      toast.error("Date is required");
+      return;
+    }
+    
     try {
       await axiosInstance.post(API_PATHS.INCOME.ADD_INCOME,{
         source,
