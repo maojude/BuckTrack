@@ -17,7 +17,7 @@ const SavingGoalInfoCard = ({
   const percentage = Math.min((savedAmount / targetAmount) * 100, 100);
 
   return (
-    <div className="group relative flex items-center gap-5 mt-2 p-3 rounded-lg hover:bg-gray-100/60">
+    <div className="group relative flex items-center gap-5 mt-2 p-3 rounded-lg hover:bg-gray-100/6 dark:hover:bg-[#202032]">
       {/* Circular progress with centered icon */}
       <div className="relative w-14 h-14">
         <CircularProgressbar
@@ -25,7 +25,7 @@ const SavingGoalInfoCard = ({
           strokeWidth={10}
           styles={buildStyles({
             pathColor: "#875cf5", // purple
-            trailColor: "#e5e7eb", // light gray
+            trailColor: "var(--trailColor)", // light gray
           })}
         />
         {/* Centered Icon */}
@@ -36,7 +36,9 @@ const SavingGoalInfoCard = ({
 
       <div className="flex-1 flex items-center justify-between">
         <div>
-          <p className="text-sm text-gray-700 font-medium">{title}</p>
+          <p className="text-sm text-gray-700 font-medium dark:text-white">
+            {title}
+          </p>
           <p className="text-xs text-gray-400 mt-1">
             ₱{savedAmount} / ₱{targetAmount} &bull; {daysLeft} days left
           </p>

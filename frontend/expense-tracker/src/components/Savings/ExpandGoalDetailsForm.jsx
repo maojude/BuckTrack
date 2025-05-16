@@ -81,7 +81,7 @@ const ExpandGoalDetailsForm = ({ goal, setGoal }) => {
             strokeWidth={10}
             styles={buildStyles({
               pathColor: "#875cf5",
-              trailColor: "#e5e7eb",
+              trailColor: "var(--trailColor)",
             })}
           />
           <div className="absolute inset-0 flex items-center justify-center text-xl">
@@ -93,34 +93,36 @@ const ExpandGoalDetailsForm = ({ goal, setGoal }) => {
           </div>
         </div>
 
-        <h3 className="text-lg font-semibold text-gray-800">{goal.title}</h3>
-        <p className="text-sm text-gray-500">
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+          {goal.title}
+        </h3>
+        <p className="text-sm text-gray-400">
           ₱{(goal.savedAmount ?? 0).toLocaleString()} / ₱
           {(goal.targetAmount ?? 0).toLocaleString()}
         </p>
       </div>
       {/* Target & Date Info */}
-      <div className="flex justify-between text-sm text-gray-600">
+      <div className="flex justify-between text-sm text-gray-400">
         <div>
-          <p className="font-medium">Target Amount</p>₱
+          <p className="font-medium dark:text-white">Target Amount</p>₱
           {(amountLeft ?? 0).toLocaleString()} left{" "}
           {/* toLocaleString adds commas to the number*/}
         </div>
         <div className="text-right">
-          <p className="font-medium">Target Date</p>
+          <p className="font-medium dark:text-white">Target Date</p>
           <p>{daysLeft} days left</p>
         </div>
       </div>
       {/* Action Buttons */}
       <div className="flex justify-between gap-4">
         <button
-          className="w-full px-4 py-2 rounded-md bg-green-50 text-green-500 cursor-pointer"
+          className="w-full px-4 py-2 rounded-md bg-green-50 text-green-500 dark:bg-green-900 dark:text-green-300 cursor-pointer"
           onClick={() => setOpenAddModal(true)}
         >
           Add Funds
         </button>
         <button
-          className="w-full px-4 py-2 rounded-md bg-red-50 text-red-500 cursor-pointer"
+          className="w-full px-4 py-2 rounded-md bg-red-50 text-red-500 dark:bg-red-900 dark:text-red-300 cursor-pointer"
           onClick={() => setOpenRemoveModal(true)}
         >
           Withdraw Funds
@@ -129,7 +131,7 @@ const ExpandGoalDetailsForm = ({ goal, setGoal }) => {
 
       {/* Transaction History */}
       <div>
-        <h4 className="text-sm font-semibold text-gray-700 mb-2">
+        <h4 className="text-sm font-semibold text-gray-700 mb-2 dark:text-white">
           Transaction History
         </h4>
         <div className="max-h-40 overflow-y-auto space-y-2 pr-1">
@@ -140,7 +142,7 @@ const ExpandGoalDetailsForm = ({ goal, setGoal }) => {
                 className="text-sm text-gray-600 rounded px-3 py-2 flex justify-between items-center"
               >
                 <div>
-                  <p className="font-medium">
+                  <p className="font-medium dark:text-gray-400">
                     {tx.type === "add" ? "Added" : "Withdrawn"}: ₱
                     {(tx.amount ?? 0).toLocaleString()}
                   </p>
@@ -151,8 +153,8 @@ const ExpandGoalDetailsForm = ({ goal, setGoal }) => {
                 <span
                   className={`text-xs px-2 py-1 rounded ${
                     tx.type === "add"
-                      ? "bg-green-100 text-green-600"
-                      : "bg-red-100 text-red-600"
+                      ? "bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300"
+                      : "bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300"
                   }`}
                 >
                   {tx.type}

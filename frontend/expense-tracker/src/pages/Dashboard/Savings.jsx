@@ -163,7 +163,7 @@ const Savings = () => {
   return (
     <DashboardLayout activeMenu="Savings">
       <div className="my-5 mx-auto">
-        <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 gap-6 my-5">
           <SavingsOverview
             totalSavingsAmount={totalSavingsAmount}
             onAddSavingGoal={() => setOpenAddSavingGoalModal(true)}

@@ -7,9 +7,9 @@ import SideMenu from "./SideMenu";
 const Navbar = ({ activeMenu }) => {
   const [openSideMenu, setOpenSideMenu] = useState(false);
   return (
-    <div className="flex gap-5 bg-white border border-b border-gray-200/60 backdrop-blur-[2px] py-4 px-7 sticky top-0 z-30">
+    <div className="flex gap-5 border border-b border-gray-200/60 backdrop-blur-[2px] py-4 px-7 sticky top-0 z-30 secondary-background dark:border-[#1c1c24]">
       <button
-        className="block lg:hidden text-black"
+        className="block lg:hidden text-black dark:text-white"
         onClick={() => {
           setOpenSideMenu(!openSideMenu);
         }}
@@ -22,11 +22,11 @@ const Navbar = ({ activeMenu }) => {
         )}
       </button>
 
-      <h2 className="text-lg font-medium text-black">BuckTrack</h2>
+      <h2 className="text-lg font-medium secondary-background">BuckTrack</h2>
 
       {/*If openSideMenu is true then open sidemenu*/}
       {openSideMenu && (
-        <div className="fixed top-[61px] -ml-4 bg-white">
+        <div className="fixed top-[61px] -ml-4 secondary-background">
           <SideMenu activeMenu={activeMenu} />
         </div>
       )}

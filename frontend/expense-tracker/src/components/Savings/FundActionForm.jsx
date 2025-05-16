@@ -27,7 +27,9 @@ const FundActionForm = ({ type = "add", onSubmit }) => {
         <button
           onClick={handleSubmit}
           className={`px-4 py-2 rounded-md text-white ${
-            type === "add" ? "bg-green-500" : "bg-red-500"
+            type === "add"
+              ? "bg-green-500 dark:bg-green-900"
+              : "bg-red-500 dark:bg-red-900"
           }`}
         >
           {type === "add" ? "Add Funds" : "Withdraw Funds"}

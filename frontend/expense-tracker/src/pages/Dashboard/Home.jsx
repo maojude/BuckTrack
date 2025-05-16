@@ -54,27 +54,27 @@ const Home = () => {
 
   return (
     <DashboardLayout activeMenu="Dashboard">
-      <div className="my-5 mx-auto text-black">
+      <div className="my-5 mx-auto text-black dark:text-white">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <InfoCard
             icon={<IoMdCard />}
             label="Total Balance"
             value={addThousandsSeparator(dashboardData?.totalBalance || 0)}
-            color="bg-primary"
+            color="bg-[var(--primary)]"
           />
 
           <InfoCard
             icon={<LuWalletMinimal />}
             label="Total Income"
             value={addThousandsSeparator(dashboardData?.totalIncome || 0)}
-            color="bg-orange-500"
+            color="bg-[var(--orange)]"
           />
 
           <InfoCard
             icon={<LuHandCoins />}
             label="Total Expense"
             value={addThousandsSeparator(dashboardData?.totalExpense || 0)}
-            color="bg-red-500"
+            color="bg-[var(--red)]"
           />
         </div>
 

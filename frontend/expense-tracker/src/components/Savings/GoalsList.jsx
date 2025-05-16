@@ -6,7 +6,9 @@ const GoalsList = ({ goals, onExpand, onEdit, onDelete }) => {
   return (
     <div className="card">
       <div className="flex items-center justify-between mb-4">
-        <h5 className="text-lg font-semibold text-gray-800">Goals List</h5>
+        <h5 className="text-lg font-semibold text-gray-800 dark:text-white">
+          Goals List
+        </h5>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

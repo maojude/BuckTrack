@@ -1,20 +1,20 @@
-import React from 'react';
+import React from "react";
 // This component is used to display a delete alert message.
 
-const DeleteAlert = ({content, onDelete}) => {
+const DeleteAlert = ({ content, onDelete }) => {
   return (
     <div>
-        <p className="text-sm">{content}</p>
+      <p className="text-sm dark:text-white">{content}</p>
 
-        <div className="flex justify-end mt-6">
-            <button
-                type="button"
-                className="add-btn add-btn-fill"
-                onClick={onDelete}
-            >
-                Delete
-            </button>
-        </div>
+      <div className="flex justify-end mt-6">
+        <button
+          type="button"
+          className="add-btn add-btn-fill"
+          onClick={onDelete}
+        >
+          Delete
+        </button>
+      </div>
     </div>
   );
 };
