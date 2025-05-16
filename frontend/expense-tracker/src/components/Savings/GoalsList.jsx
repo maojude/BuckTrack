@@ -2,7 +2,7 @@ import React from "react";
 import moment from "moment";
 import SavingGoalInfoCard from "../Cards/SavingGoalInfoCard";
 
-const GoalsList = ({ goals, onExpand }) => {
+const GoalsList = ({ goals, onExpand, onEdit, onDelete }) => {
   return (
     <div className="card">
       <div className="flex items-center justify-between mb-4">
@@ -22,6 +22,8 @@ const GoalsList = ({ goals, onExpand }) => {
               savedAmount={savingGoal.savedAmount}
               daysLeft={daysLeft}
               onExpand={() => onExpand(savingGoal)}
+              onDelete={() => onDelete(savingGoal._id)}
+              onEdit={() => onEdit(savingGoal._id)}
             />
           );
         })}

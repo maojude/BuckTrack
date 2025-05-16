@@ -123,7 +123,7 @@ const ExpandGoalDetailsForm = ({ goal, setGoal }) => {
           className="w-full px-4 py-2 rounded-md bg-red-50 text-red-500 cursor-pointer"
           onClick={() => setOpenRemoveModal(true)}
         >
-          Remove Funds
+          Withdraw Funds
         </button>
       </div>
 
@@ -137,7 +137,7 @@ const ExpandGoalDetailsForm = ({ goal, setGoal }) => {
             transactions.map((tx) => (
               <div
                 key={tx._id}
-                className="text-sm text-gray-600 border rounded px-3 py-2 flex justify-between items-center"
+                className="text-sm text-gray-600 rounded px-3 py-2 flex justify-between items-center"
               >
                 <div>
                   <p className="font-medium">

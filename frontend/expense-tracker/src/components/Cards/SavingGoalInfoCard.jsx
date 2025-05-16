@@ -1,6 +1,6 @@
 import React from "react";
 import moment from "moment";
-import { LuChevronRight } from "react-icons/lu";
+import { LuChevronRight, LuPencil, LuTrash2 } from "react-icons/lu";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
@@ -11,6 +11,8 @@ const SavingGoalInfoCard = ({
   targetAmount,
   savedAmount,
   onExpand,
+  onDelete,
+  onEdit,
 }) => {
   const percentage = Math.min((savedAmount / targetAmount) * 100, 100);
 
@@ -41,13 +43,31 @@ const SavingGoalInfoCard = ({
         </div>
       </div>
 
-      <button
-        className="text-gray-400 hover:text-primary opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-        onClick={onExpand}
-        title="Expand Goal"
-      >
-        <LuChevronRight size={18} />
-      </button>
+      <div className="flex items-center gap-2">
+        {/* Delete button*/}
+        <button
+          className="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+          onClick={onDelete}
+        >
+          <LuTrash2 size={18} />
+        </button>
+
+        {/*Edit button*/}
+        <button
+          className="text-gray-400 hover:text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+          onClick={onEdit}
+        >
+          <LuPencil size={18} />
+        </button>
+
+        <button
+          className="text-gray-400 hover:text-primary opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+          onClick={onExpand}
+          title="Expand Goal"
+        >
+          <LuChevronRight size={18} />
+        </button>
+      </div>
     </div>
   );
 };
