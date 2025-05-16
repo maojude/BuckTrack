@@ -21,12 +21,16 @@ const SavingsSchema = new mongoose.Schema(
     },
     savedAmount: {
       type: Number,
-      required: true,
+      required: false,
       default: 0,
+    },
+    targetDate: {
+      type: Date,
+      required: true,
     },
     date: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Savings", SavingsSchema);
+module.exports = mongoose.model("SavingGoal", SavingsSchema);

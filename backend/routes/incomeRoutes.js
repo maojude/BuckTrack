@@ -14,5 +14,4 @@ router.post("/add", protect, addIncome);
 router.get("/get", protect, getAllIncome);
 router.delete("/delete/:id", protect, deleteIncome);
 router.put("/update/:id", protect, updateIncome);
-
 module.exports = router;

@@ -24,4 +24,16 @@ export const API_PATHS = {
     DELETE_EXPENSE: (expenseId) => `api/v1/expense/delete/${expenseId}`,
     UPDATE_EXPENSE: (expenseId) => `api/v1/expense/update/${expenseId}`,
   },
+  SAVINGS: {
+    ADD_SAVING_GOAL: "api/v1/savings/addSavingGoal",
+    GET_ALL_SAVING_GOALS: "api/v1/savings/getAllSavingGoals",
+    DELETE_SAVING_GOAL: (savingsId) =>
+      `api/v1/savings/deleteSavingGoal/${savingsId}`,
+    ADD_SAVING_FUNDS: (savingsId) =>
+      `api/v1/savings/addSavingFunds/${savingsId}`,
+    REMOVE_SAVING_FUNDS: (savingsId) =>
+      `api/v1/savings/removeSavingFunds/${savingsId}`,
+    GET_SAVING_TRANSACTIONS: (savingsId) =>
+      `api/v1/savings/getSavingTransactions/${savingsId}`,
+  },
 };
