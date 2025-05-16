@@ -48,7 +48,7 @@ exports.getAllSavingGoals = async (req, res) => {
 exports.getSavingTransactions = async (req, res) => {
   try {
     const userId = req.user.id; // passed by protect middleware
-    const { id: savingId } = req.params; // Get the savingId from the request parameters
+    const { savingId } = req.params; // Get the savingId from the request parameters
 
     const transactions = await SavingTransaction.find({
       userId,
@@ -113,17 +113,27 @@ exports.deleteSavingGoal = async (req, res) => {
     const userId = req.user.id; // passed by protect middleware
     const { savingId } = req.params; // Get the savingId from the request parameters
 
-    const saving = await Savings.findOne({ _id: savingId, userId });
+    const saving = await SavingGoal.findOne({ _id: savingId, userId });
 
     if (!saving) {
       return res.status(404).json({ message: "Saving goal not found" });
     }
 
-    // Delete the saving goal
-    await Savings.deleteOne({ _id: savingId, userId });
+    if (saving.savedAmount > 0) {
+      await Income.create({
+        userId,
+        source: `Refund from deleted goal: ${saving.title}`,
+        amount: saving.savedAmount,
+        date: new Date(),
+        icon: saving.icon,
+      });
+    }
 
     // Delete related saving transactions
     await SavingTransaction.deleteMany({ savingId, userId });
+
+    // Delete the saving goal
+    await SavingGoal.deleteOne({ _id: savingId, userId });
 
     res.status(200).json({ message: "Saving goal deleted successfully" });
   } catch (error) {
@@ -188,10 +198,10 @@ exports.removeSavingFunds = async (req, res) => {
 // Update saving goal
 exports.updateSavingGoal = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { savingId } = req.params;
 
     const updated = await SavingGoal.findOneAndUpdate(
-      { _id: id, userId: req.user.id }, // looks for the record
+      { _id: savingId, userId: req.user.id }, // looks for the record
       { ...req.body },
       { new: true, runValidators: true }
     );

@@ -35,5 +35,6 @@ export const API_PATHS = {
       `api/v1/savings/removeSavingFunds/${savingsId}`,
     GET_SAVING_TRANSACTIONS: (savingsId) =>
       `api/v1/savings/getSavingTransactions/${savingsId}`,
+    UPDATE_SAVING_GOAL: (id) => `api/v1/savings/updateSavingGoal/${id}`,
   },
 };
