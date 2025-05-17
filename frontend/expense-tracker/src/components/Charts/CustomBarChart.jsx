@@ -10,12 +10,17 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
+import { getCurrencySymbol } from "../../utils/helper";
+import { useTheme } from "../../context/ThemeContext";
 
 const CustomBarChart = ({ data }) => {
   //Function to alternate colors
   const getBarColor = (index) => {
     return index % 2 === 0 ? "#875cf5" : "#cfbefb";
   };
+
+  const { currency } = useTheme();
+  const currencySymbol = getCurrencySymbol(currency);
 
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
@@ -27,7 +32,8 @@ const CustomBarChart = ({ data }) => {
           <p className="text-sm text-gray-600 dark:text-[#fcfbfc]">
             Amount:{" "}
             <span className="text-sm text-gray-600 dark:text-white">
-              ₱{payload[0].value}
+              {currencySymbol}
+              {payload[0].value}
             </span>
           </p>
         </div>

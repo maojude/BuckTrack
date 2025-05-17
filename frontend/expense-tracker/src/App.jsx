@@ -14,12 +14,11 @@ import Income from "./pages/Dashboard/Income";
 import Expense from "./pages/Dashboard/Expense";
 import Savings from "./pages/Dashboard/Savings";
 import Settings from "./pages/Dashboard/Settings";
-import UserProvider from "./context/userContext";
 import { Toaster } from "react-hot-toast";
 
 const App = () => {
   return (
-    <UserProvider>
+    <>
       <div>
         <Router>
           <Routes>
@@ -43,7 +42,7 @@ const App = () => {
           },
         }}
       />
-    </UserProvider>
+    </>
   );
 };
 export default App;

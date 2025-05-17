@@ -1,5 +1,7 @@
 import React from "react";
 import CustomPieChart from "../Charts/CustomPieChart";
+import { getCurrencySymbol } from "../../utils/helper";
+import { useTheme } from "../../context/ThemeContext";
 
 const COLORS = ["var(--primary)", "var(--red)", "var(--orange)"];
 
@@ -10,6 +12,9 @@ const FinanceOverview = ({ totalBalance, totalIncome, totalExpense }) => {
     { name: "Total Income", amount: totalIncome },
   ];
 
+  const { currency } = useTheme();
+  const currencySymbol = getCurrencySymbol(currency);
+
   return (
     <div className="card">
       <div className="flex items-center justify-between">
@@ -19,7 +24,7 @@ const FinanceOverview = ({ totalBalance, totalIncome, totalExpense }) => {
       <CustomPieChart
         data={balanceData}
         label="Total Balance"
-        totalAmount={`₱${totalBalance}`}
+        totalAmount={`${currencySymbol}${totalBalance}`}
         colors={COLORS}
         showTextAnchor
       />

@@ -6,9 +6,14 @@ import { API_PATHS } from "../../utils/apiPaths";
 import axiosInstance from "../../utils/axiosInstance";
 import Modal from "../layouts/Modal";
 import FundActionForm from "./FundActionForm";
+import { getCurrencySymbol } from "../../utils/helper";
+import { useTheme } from "../../context/ThemeContext";
 
 const ExpandGoalDetailsForm = ({ goal, setGoal }) => {
   if (!goal) return <p className="text-sm text-gray-400">Loading...</p>;
+
+  const { currency } = useTheme();
+  const currencySymbol = getCurrencySymbol(currency);
 
   const [transactions, setTransactions] = useState([]);
   const [openAddModal, setOpenAddModal] = useState(false);
@@ -97,14 +102,16 @@ const ExpandGoalDetailsForm = ({ goal, setGoal }) => {
           {goal.title}
         </h3>
         <p className="text-sm text-gray-400">
-          ₱{(goal.savedAmount ?? 0).toLocaleString()} / ₱
+          {currencySymbol}
+          {(goal.savedAmount ?? 0).toLocaleString()} / {currencySymbol}
           {(goal.targetAmount ?? 0).toLocaleString()}
         </p>
       </div>
       {/* Target & Date Info */}
       <div className="flex justify-between text-sm text-gray-400">
         <div>
-          <p className="font-medium dark:text-white">Target Amount</p>₱
+          <p className="font-medium dark:text-white">Target Amount</p>
+          {currencySymbol}
           {(amountLeft ?? 0).toLocaleString()} left{" "}
           {/* toLocaleString adds commas to the number*/}
         </div>
@@ -116,13 +123,13 @@ const ExpandGoalDetailsForm = ({ goal, setGoal }) => {
       {/* Action Buttons */}
       <div className="flex justify-between gap-4">
         <button
-          className="w-full px-4 py-2 rounded-md bg-green-50 text-green-500 dark:bg-green-900 dark:text-green-300 cursor-pointer"
+          className="w-full px-4 py-2 text-green-500 rounded-md cursor-pointer bg-green-50 dark:bg-green-900 dark:text-green-300"
           onClick={() => setOpenAddModal(true)}
         >
           Add Funds
         </button>
         <button
-          className="w-full px-4 py-2 rounded-md bg-red-50 text-red-500 dark:bg-red-900 dark:text-red-300 cursor-pointer"
+          className="w-full px-4 py-2 text-red-500 rounded-md cursor-pointer bg-red-50 dark:bg-red-900 dark:text-red-300"
           onClick={() => setOpenRemoveModal(true)}
         >
           Withdraw Funds
@@ -131,19 +138,20 @@ const ExpandGoalDetailsForm = ({ goal, setGoal }) => {
 
       {/* Transaction History */}
       <div>
-        <h4 className="text-sm font-semibold text-gray-700 mb-2 dark:text-white">
+        <h4 className="mb-2 text-sm font-semibold text-gray-700 dark:text-white">
           Transaction History
         </h4>
-        <div className="max-h-40 overflow-y-auto space-y-2 pr-1">
+        <div className="pr-1 space-y-2 overflow-y-auto max-h-40">
           {transactions.length > 0 ? (
             transactions.map((tx) => (
               <div
                 key={tx._id}
-                className="text-sm text-gray-600 rounded px-3 py-2 flex justify-between items-center"
+                className="flex items-center justify-between px-3 py-2 text-sm text-gray-600 rounded"
               >
                 <div>
                   <p className="font-medium dark:text-gray-400">
-                    {tx.type === "add" ? "Added" : "Withdrawn"}: ₱
+                    {tx.type === "add" ? "Added" : "Withdrawn"}:{" "}
+                    {currencySymbol}
                     {(tx.amount ?? 0).toLocaleString()}
                   </p>
                   <p className="text-xs text-gray-400">

@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import CustomPieChart from "../Charts/CustomPieChart";
+import { getCurrencySymbol } from "../../utils/helper";
+import { useTheme } from "../../context/ThemeContext";
 
 const COLORS = ["var(--primary)", "var(--red)", "var(--orange)", "#4f30f6"];
 
 const RecentIncomeWithChart = ({ data, totalIncome }) => {
   const [chartData, setChartData] = useState([]);
+
+  const { currency } = useTheme();
+  const currencySymbol = getCurrencySymbol(currency);
 
   const prepareChartData = () => {
     const dataArr = data?.map((item) => ({
@@ -30,7 +35,7 @@ const RecentIncomeWithChart = ({ data, totalIncome }) => {
       <CustomPieChart
         data={chartData}
         label="Total Income"
-        totalAmount={`₱${totalIncome}`}
+        totalAmount={`${currencySymbol}${totalIncome}`}
         showTextAnchor
         colors={COLORS}
       />

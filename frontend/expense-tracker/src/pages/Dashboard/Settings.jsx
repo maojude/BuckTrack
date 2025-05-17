@@ -1,26 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DashboardLayout from "../../components/layouts/DashboardLayout";
 import { Switch } from "@headlessui/react";
 import { useTheme } from "../../context/ThemeContext";
+import axiosInstance from "../../utils/axiosInstance";
+import toast from "react-hot-toast";
+import { API_PATHS } from "../../utils/apiPaths";
 
 const Settings = () => {
   const { theme, toggleTheme } = useTheme();
-  const [currency, setCurrency] = useState("PHP");
-
   const darkMode = theme === "dark";
 
-  const handleSave = () => {
-    // TODO: Save preferences like currency to backend or localStorage
-    console.log({ theme, currency });
+  const { currency, setCurrency } = useTheme();
+
+  const handleSave = async () => {
+    try {
+      await axiosInstance.put(API_PATHS.AUTH.UPDATE_THEME, {
+        theme,
+        currency,
+      });
+
+      setCurrency(currency);
+      toast.success("Preferences saved");
+    } catch (error) {
+      console.error("Failed to save preferences:", error);
+      toast.error("Failed to save preferences");
+    }
   };
 
   return (
     <DashboardLayout activeMenu="Settings">
-      <div className="card my-5">
+      <div className="my-5 card">
         <div className="p-5">
-          <h2 className="text-2xl font-semibold mb-4">Settings</h2>
+          <h2 className="mb-4 text-2xl font-semibold">Settings</h2>
 
-          <div className="space-y-6 max-w-md">
+          <div className="max-w-md space-y-6">
             {/* Currency preference */}
             <div>
               <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -29,7 +42,7 @@ const Settings = () => {
               <select
                 value={currency}
                 onChange={(e) => setCurrency(e.target.value)}
-                className="w-full border px-3 py-2 rounded-md dark:bg-gray-800 dark:text-white"
+                className="w-full px-3 py-2 border rounded-md dark:bg-gray-800 dark:text-white"
               >
                 <option value="PHP">PHP - Philippine Peso</option>
                 <option value="USD">USD - US Dollar</option>
@@ -61,7 +74,7 @@ const Settings = () => {
             {/* Save Button */}
             <button
               onClick={handleSave}
-              className="add-btn-fill text-white px-4 py-2 rounded-md"
+              className="px-4 py-2 text-white rounded-md add-btn-fill"
             >
               Save Preferences
             </button>

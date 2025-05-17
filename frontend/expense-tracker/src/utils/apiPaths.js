@@ -8,6 +8,8 @@ export const API_PATHS = {
     SIGNUP: "api/v1/auth/register",
     GET_USER_INFO: "api/v1/auth/getUser",
     GOOGLE_LOGIN: "api/v1/auth/google-login",
+    UPDATE_THEME: "api/v1/auth/updateTheme",
+    GET_PREFERENCE: "api/v1/auth/getPreferences",
   },
   DASHBOARD: {
     GET_DATA: "api/v1/dashboard",
