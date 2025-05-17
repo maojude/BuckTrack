@@ -8,6 +8,7 @@ import Modal from "../layouts/Modal";
 import FundActionForm from "./FundActionForm";
 import { getCurrencySymbol } from "../../utils/helper";
 import { useTheme } from "../../context/ThemeContext";
+import toast from "react-hot-toast";
 
 const ExpandGoalDetailsForm = ({ goal, setGoal }) => {
   if (!goal) return <p className="text-sm text-gray-400">Loading...</p>;

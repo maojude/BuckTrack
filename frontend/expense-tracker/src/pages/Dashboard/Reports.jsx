@@ -5,10 +5,12 @@ import { API_PATHS } from "../../utils/apiPaths";
 import CustomPieChart from "../../components/Charts/CustomPieChart"; // Your reusable chart component
 import { useTheme } from "../../context/ThemeContext";
 import { addThousandsSeparator } from "../../utils/helper";
+import { getCurrencySymbol } from "../../utils/helper";
 
 const Reports = () => {
   const [report, setReport] = useState(null);
   const { currency } = useTheme();
+  const currencySymbol = getCurrencySymbol(currency);
 
   // More diverse color sets (you can tweak or add more)
   const incomeColors = [
@@ -67,20 +69,22 @@ const Reports = () => {
       <h2 className="mb-2 text-lg font-semibold">{label} Report</h2>
 
       <p className="mb-2 text-sm">
-        Total Income: {currency}
+        Total Income: {currencySymbol}
         {addThousandsSeparator(data.totalIncome)}
         <br />
-        Total Expense: {currency}
+        Total Expense: {currencySymbol}
         {addThousandsSeparator(data.totalExpense)}
         <br />
-        Total Saved: {currency}
+        Total Saved: {currencySymbol}
         {addThousandsSeparator(data.totalSavingsAdded)}
       </p>
 
       <CustomPieChart
         data={data.incomeSources}
         label="Income Breakdown"
-        totalAmount={`${currency}${addThousandsSeparator(data.totalIncome)}`}
+        totalAmount={`${currencySymbol}${addThousandsSeparator(
+          data.totalIncome
+        )}`}
         showTextAnchor
         colors={incomeColors}
       />
@@ -88,7 +92,9 @@ const Reports = () => {
       <CustomPieChart
         data={data.expenseCategories}
         label="Expense Breakdown"
-        totalAmount={`${currency}${addThousandsSeparator(data.totalExpense)}`}
+        totalAmount={`${currencySymbol}${addThousandsSeparator(
+          data.totalExpense
+        )}`}
         showTextAnchor
         colors={expenseColors}
       />
@@ -96,7 +102,7 @@ const Reports = () => {
       <CustomPieChart
         data={data.savingsActivity}
         label="Savings Activity"
-        totalAmount={`${currency}${addThousandsSeparator(
+        totalAmount={`${currencySymbol}${addThousandsSeparator(
           data.totalSavingsAdded
         )}`}
         showTextAnchor
