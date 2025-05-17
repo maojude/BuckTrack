@@ -12,26 +12,32 @@ import {
 } from "recharts";
 
 const CustomPieChart = ({
-  data,
+  data = [],
   label,
   totalAmount,
   colors,
   showTextAnchor,
+  nameKey = "name",
+  dataKey = "amount",
 }) => {
+  if (!Array.isArray(data) || data.length === 0) {
+    return <p className="text-center text-gray-500">No data available</p>;
+  }
+
   return (
     <ResponsiveContainer width="100%" height={380}>
       <PieChart>
         <Pie
           data={data}
-          dataKey="amount"
-          nameKey="name"
+          dataKey={dataKey}
+          nameKey={nameKey}
           cx="50%" // center the pie chart
           cy="50%"
           outerRadius={130}
           innerRadius={100}
           labelLine={false}
         >
-          {data.map(
+          {(data || []).map(
             (
               entry,
               index //Create a slice in the pie for each data entry

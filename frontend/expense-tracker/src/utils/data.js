@@ -5,6 +5,7 @@ import {
   LuLogOut,
   LuPiggyBank,
   LuBolt,
+  LuClipboardList,
 } from "react-icons/lu";
 
 export const SIDE_MENU_DATA = [
@@ -34,12 +35,18 @@ export const SIDE_MENU_DATA = [
   },
   {
     id: "05",
+    label: "Reports",
+    icon: LuClipboardList,
+    path: "/reports",
+  },
+  {
+    id: "06",
     label: "Settings",
     icon: LuBolt,
     path: "/settings",
   },
   {
-    id: "06",
+    id: "07",
     label: "Logout",
     icon: LuLogOut,
     path: "logout",

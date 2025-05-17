@@ -9,6 +9,7 @@ const expenseRoutes = require("./routes/expenseRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const savingsRoutes = require("./routes/savingsRoutes");
 const adminFirebase = require("./firebaseAdmin");
+const reportRoutes = require("./routes/reportRoutes");
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use("/api/v1/income", incomeRoutes);
 app.use("/api/v1/expense", expenseRoutes);
 app.use("/api/v1/dashboard", dashboardRoutes);
 app.use("/api/v1/savings", savingsRoutes);
+app.use("/api/v1/reports", reportRoutes);
 
 //start the server
 const PORT = process.env.PORT || 5000;

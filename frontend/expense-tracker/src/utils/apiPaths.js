@@ -39,4 +39,7 @@ export const API_PATHS = {
       `api/v1/savings/getSavingTransactions/${savingsId}`,
     UPDATE_SAVING_GOAL: (id) => `api/v1/savings/updateSavingGoal/${id}`,
   },
+  REPORT: {
+    GET_REPORT: "api/v1/reports/overview",
+  },
 };

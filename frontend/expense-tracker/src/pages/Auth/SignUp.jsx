@@ -1,19 +1,19 @@
-import React, { useState, useContext } from 'react';
-import AuthLayout from '../../components/layouts/AuthLayout';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useContext } from "react";
+import AuthLayout from "../../components/layouts/AuthLayout";
+import { useNavigate } from "react-router-dom";
 import Input from "../../components/Inputs/Input";
-import { Link } from 'react-router-dom';
-import { validateEmail } from '../../utils/helper';
-import axiosInstance from '../../utils/axiosInstance';
-import { API_PATHS } from '../../utils/apiPaths';
-import { UserContext } from '../../context/userContext';
-
+import { Link } from "react-router-dom";
+import { validateEmail } from "../../utils/helper";
+import axiosInstance from "../../utils/axiosInstance";
+import { API_PATHS } from "../../utils/apiPaths";
+import { UserContext } from "../../context/userContext";
+import emailjs from "@emailjs/browser";
 
 const SignUp = () => {
   const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState(""); 
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  
+
   const [error, setError] = useState(null);
 
   const { updateUser } = useContext(UserContext); // to use update user data using context
@@ -22,22 +22,22 @@ const SignUp = () => {
   const handleSignUp = async (e) => {
     e.preventDefault(); //prevent default form submission (refreshing the page)
 
-    if(!fullName){
+    if (!fullName) {
       setError("Please enter your full name.");
-      return; 
+      return;
     }
 
-    if(!validateEmail(email)){
+    if (!validateEmail(email)) {
       setError("Please enter a valid email address.");
-      return; 
+      return;
     }
 
-    if(!password){
+    if (!password) {
       setError("Please enter the password.");
-      return; 
+      return;
     }
 
-    if(password.length < 8){  
+    if (password.length < 8) {
       setError("Password must be at least 8 characters long.");
       return;
     }
@@ -45,7 +45,7 @@ const SignUp = () => {
     setError("");
 
     //Sign Up API call
-    try{
+    try {
       const response = await axiosInstance.post(API_PATHS.AUTH.SIGNUP, {
         fullName,
         email,
@@ -54,20 +54,37 @@ const SignUp = () => {
 
       const { token, user } = response.data;
 
-      if(token) {
+      if (token) {
         localStorage.setItem("token", token);
         updateUser(user);
-        navigate("/dashboard");
+
+        emailjs
+          .send(
+            import.meta.env.VITE_EMAILJS_SERVICE_ID,
+            import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+            {
+              name: fullName,
+              email: email,
+            },
+            import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+          )
+          .then(() => {
+            console.log("Welcome email sent");
+            navigate("/dashboard");
+          })
+          .catch((error) => {
+            console.error("Email failed to send:", error);
+            navigate("/dashboard"); // still proceed even if email fails
+          });
       }
     } catch (err) {
-      if(err.response && err.response.data.message) {
+      if (err.response && err.response.data.message) {
         setError(err.response.data.message);
-      }else {
+      } else {
         setError("Something went wrong. Please try again. ");
       }
     }
   };
-
 
   return (
     <AuthLayout>
@@ -78,10 +95,9 @@ const SignUp = () => {
         </p>
 
         <form onSubmit={handleSignUp}>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <Input
-              value={fullName} 
+              value={fullName}
               onChange={({ target }) => setFullName(target.value)}
               label="Full Name"
               placeholder="John Doe"
@@ -89,7 +105,7 @@ const SignUp = () => {
             />
 
             <Input
-              value={email} 
+              value={email}
               onChange={({ target }) => setEmail(target.value)}
               label="Email Address"
               placeholder="john@example.com"
@@ -98,7 +114,7 @@ const SignUp = () => {
 
             <div className="col-span-2">
               <Input
-                value={password} 
+                value={password}
                 onChange={({ target }) => setPassword(target.value)}
                 label="Password"
                 placeholder="Min 8 characters"
@@ -109,21 +125,21 @@ const SignUp = () => {
 
           {/* Error message set from handleLogin function */}
           {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
-          
+
           <button type="submit" className="btn-primary">
             SIGN UP
           </button>
-          
+
           <p className="text-[13px] text-slate-800 mt-3">
             Already have an account?{" "}
-           <Link className="font-medium text-primary underline" to="/login">
+            <Link className="font-medium underline text-primary" to="/login">
               Login
-            </Link> 
+            </Link>
           </p>
         </form>
       </div>
     </AuthLayout>
-  )
+  );
 };
 
 export default SignUp;

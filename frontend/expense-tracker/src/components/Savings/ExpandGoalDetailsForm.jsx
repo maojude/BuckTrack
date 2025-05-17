@@ -44,8 +44,20 @@ const ExpandGoalDetailsForm = ({ goal, setGoal }) => {
 
       if (type === "add") setOpenAddModal(false);
       else setOpenRemoveModal(false);
+
+      toast.success(
+        type === "add"
+          ? "Funds added successfully!"
+          : "Funds removed successfully!"
+      );
     } catch (error) {
       console.error("Error performing fund action:", error);
+
+      toast.error(
+        type === "add"
+          ? "Failed to add funds. Please try again."
+          : "Failed to remove funds. Please try again."
+      );
     }
   };
 

@@ -76,7 +76,6 @@ exports.loginUser = async (req, res) => {
     }
 
     //Generate JWT token and send response
-
     res.status(200).json({
       id: user._id,
       user,
@@ -128,12 +127,14 @@ exports.googleLogin = async (req, res) => {
         email,
         provider: "google",
       });
+      isNewUser = true;
     }
 
     res.status(200).json({
       id: user._id,
       user,
       token: generateToken(user._id),
+      isNewUser,
     });
   } catch (error) {
     res
