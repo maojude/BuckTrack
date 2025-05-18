@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import DashboardLayout from "../../components/layouts/DashboardLayout";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
-import CustomPieChart from "../../components/Charts/CustomPieChart"; // Your reusable chart component
+import CustomPieChart from "../../components/Charts/CustomPieChart"; // reusable chart component
 import { useTheme } from "../../context/ThemeContext";
 import { addThousandsSeparator } from "../../utils/helper";
 import { getCurrencySymbol } from "../../utils/helper";
@@ -12,7 +12,6 @@ const Reports = () => {
   const { currency } = useTheme();
   const currencySymbol = getCurrencySymbol(currency);
 
-  // More diverse color sets (you can tweak or add more)
   const incomeColors = [
     "#8b5cf6",
     "#a78bfa",
