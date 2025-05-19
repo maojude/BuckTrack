@@ -76,13 +76,8 @@ const Login = () => {
       const idToken = await result.user.getIdToken(); // Firebase ID token (diff from jwt token)
       console.log("Got ID token:", idToken);
 
-      // Send to backend
-      const userAgent = navigator.userAgent;
       const response = await axiosInstance.post(API_PATHS.AUTH.GOOGLE_LOGIN, {
         idToken,
-        metadata: {
-          userAgent,
-        },
       });
       console.log("Backend response:", response);
 
@@ -94,20 +89,26 @@ const Login = () => {
       console.log("Login successful!");
       updateUser(user);
       console.log("User updated:", user);
-      navigate("/dashboard");
-      console.log("Navigated to dashboard");
 
       if (isNewUser) {
-        await emailjs.send(
-          "service_w46zqyo",
-          "template_2mprid8",
-          {
-            to_name: fullName,
-            to_email: email,
-          },
-          "otqL1JOVIDRNH0nTK"
-        );
+        try {
+          await emailjs.send(
+            import.meta.env.VITE_EMAILJS_SERVICE_ID,
+            import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+            {
+              name: user.fullName,
+              email: user.email,
+            },
+            import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+          );
+          console.log("Welcome email sent to new user!");
+        } catch (emailError) {
+          console.error("Failed to send welcome email:", emailError);
+        }
       }
+
+      navigate("/dashboard");
+      console.log("Navigated to dashboard");
     } catch (error) {
       console.error("Google sign-in failed:", error);
 

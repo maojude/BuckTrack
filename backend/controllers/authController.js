@@ -107,12 +107,16 @@ exports.getUserInfo = async (req, res) => {
 exports.googleLogin = async (req, res) => {
   const { idToken } = req.body;
 
+  console.log("Received idToken:", req.body.idToken);
+
   try {
     const decodedToken = await auth().verifyIdToken(idToken);
     const { uid, name, email } = decodedToken;
 
     // look for existing user
     let user = await User.findOne({ email });
+
+    let isNewUser = false;
 
     if (user && user.provider === "local") {
       return res.status(400).json({
@@ -127,6 +131,7 @@ exports.googleLogin = async (req, res) => {
         email,
         provider: "google",
       });
+
       isNewUser = true;
     }
 
