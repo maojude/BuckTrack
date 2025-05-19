@@ -26,7 +26,7 @@ const FundActionForm = ({ type = "add", onSubmit }) => {
       <div className="flex justify-end">
         <button
           onClick={handleSubmit}
-          className={`px-4 py-2 rounded-md text-white ${
+          className={`px-4 py-2 rounded-md text-white cursor-pointer ${
             type === "add"
               ? "bg-green-500 dark:bg-green-900"
               : "bg-red-500 dark:bg-red-900"

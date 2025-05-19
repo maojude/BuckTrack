@@ -21,6 +21,13 @@ exports.addIncome = async (req, res) => {
       date: new Date(date),
     });
 
+    await User.findByIdAndUpdate(userId, {
+      $inc: { totalBalance: amount },
+    });
+
+    const updatedUser = await User.findById(userId).select("totalBalance");
+    console.log(`[AddIncome] New totalBalance: ₱${updatedUser.totalBalance}`);
+
     await newIncome.save(); // Save the new income to the database
     res.status(200).json(newIncome);
   } catch (error) {
@@ -42,8 +49,29 @@ exports.getAllIncome = async (req, res) => {
 
 // Delete Income Source
 exports.deleteIncome = async (req, res) => {
+  const userId = req.user.id;
+
   try {
-    await Income.findByIdAndDelete(req.params.id); // Find and delete the income by ID and userId
+    const income = await Income.findOneAndDelete({
+      _id: req.params.id,
+      userId,
+    });
+
+    if (!income) {
+      return res
+        .status(404)
+        .json({ message: "Income not found or not authorized" });
+    }
+
+    await User.findByIdAndUpdate(userId, {
+      $inc: { totalBalance: -income.amount },
+    });
+
+    const updatedUser = await User.findById(userId).select("totalBalance");
+    console.log(
+      `[DeleteIncome] New totalBalance: ₱${updatedUser.totalBalance}`
+    );
+
     res.json({ message: "Income deleted successfully" }); // Respond with success message
   } catch (error) {
     res.status(500).json({ message: "Server error" });
@@ -53,18 +81,37 @@ exports.deleteIncome = async (req, res) => {
 exports.updateIncome = async (req, res) => {
   try {
     const { id } = req.params;
+    const userId = req.user.id;
 
-    const updated = await Income.findOneAndUpdate(
-      { _id: id, userId: req.user.id }, // looks for record that matches the id and userId
-      { ...req.body },
-      { new: true, runValidators: true } // return the updated record and run validators
-    );
+    // Step 1: Get the existing income record
+    const existingIncome = await Income.findOne({ _id: id, userId });
 
-    if (!updated) {
+    if (!existingIncome) {
       return res.status(404).json({ message: "Income not found" });
     }
 
-    res.status(200).json(updated); // Return the updated income as JSON
+    const newAmount = req.body.amount;
+    const oldAmount = existingIncome.amount;
+    const difference = newAmount - oldAmount;
+
+    // Step 2: Update the income record
+    const updated = await Income.findByIdAndUpdate(
+      id,
+      { ...req.body },
+      { new: true, runValidators: true }
+    );
+
+    // Step 3: Adjust the user's totalBalance
+    await User.findByIdAndUpdate(userId, {
+      $inc: { totalBalance: difference },
+    });
+
+    const updatedUser = await User.findById(userId).select("totalBalance");
+    console.log(
+      `[UpdateIncome] New totalBalance: ₱${updatedUser.totalBalance}`
+    );
+
+    res.status(200).json(updated);
   } catch (error) {
     console.error("Error updating income:", error);
     res.status(500).json({ message: "Server error" });

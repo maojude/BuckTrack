@@ -77,6 +77,12 @@ exports.addSavingFunds = async (req, res) => {
       return res.status(404).json({ message: "Saving goal not found" });
     }
 
+    // Check if user has enough balance to add the funds
+    const user = await User.findById(userId);
+    if (user.totalBalance < amount) {
+      return res.status(400).json({ message: "Insufficient balance" });
+    }
+
     // Increase the saved amount in the saving goal
     savingGoal.savedAmount += amount;
     await savingGoal.save();
@@ -98,6 +104,14 @@ exports.addSavingFunds = async (req, res) => {
       date: new Date(),
       icon: savingGoal.icon,
     });
+
+    await User.findByIdAndUpdate(userId, {
+      $inc: { totalBalance: -amount },
+    });
+    const updatedUser = await User.findById(userId).select("totalBalance");
+    console.log(
+      `[AddSavingFunds] New totalBalance: ₱${updatedUser.totalBalance}`
+    );
 
     res
       .status(201)
@@ -127,6 +141,15 @@ exports.deleteSavingGoal = async (req, res) => {
         date: new Date(),
         icon: saving.icon,
       });
+
+      // Add to user's total balance the saved amount of the saving goal (Refund)
+      await User.findByIdAndUpdate(userId, {
+        $inc: { totalBalance: saving.savedAmount },
+      });
+      const updatedUser = await User.findById(userId).select("totalBalance");
+      console.log(
+        `[DeleteSavingGoal] New totalBalance: ₱${updatedUser.totalBalance}`
+      );
     }
 
     // Delete related saving transactions
@@ -157,7 +180,7 @@ exports.removeSavingFunds = async (req, res) => {
       return res.status(404).json({ message: "Saving goal not found" });
     }
 
-    // Decrease the saved amount in the saving goal
+    // If amount to be withdrawn is less than the stored saved amount, show error
     if (savingGoal.savedAmount < amount) {
       return res
         .status(400)
@@ -185,6 +208,13 @@ exports.removeSavingFunds = async (req, res) => {
       date: new Date(),
       icon: savingGoal.icon,
     });
+
+    // Update user's totalBalance
+    await User.findByIdAndUpdate(userId, {
+      $inc: { totalBalance: amount },
+    });
+    const updatedUser = await User.findById(userId).select("totalBalance");
+    console.log(`[RemoveFunds] New totalBalance: ₱${updatedUser.totalBalance}`);
 
     res
       .status(201)

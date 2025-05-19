@@ -9,6 +9,7 @@ const UserSchema = new mongoose.Schema(
     provider: { type: String, enum: ["local", "google"], default: "local" },
     theme: { type: String, enum: ["light", "dark"], default: "light" },
     currency: { type: String, default: "PHP" },
+    totalBalance: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

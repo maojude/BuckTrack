@@ -54,11 +54,29 @@ const ExpandGoalDetailsForm = ({ goal, setGoal }) => {
     } catch (error) {
       console.error("Error performing fund action:", error);
 
-      toast.error(
-        type === "add"
-          ? "Failed to add funds. Please try again."
-          : "Failed to remove funds. Please try again."
-      );
+      const message = error.response?.data?.message;
+
+      if (error.response?.status === 400) {
+        switch (message) {
+          case "Amount must be greater than 0":
+            toast.error("Amount must be greater than 0");
+            break;
+          case "Insufficient balance":
+            toast.error("You don't have enough total balance for this saving");
+            break;
+          case "Insufficient funds in saving to withdraw":
+            toast.error("Not enough saved funds to withdraw that amount");
+            break;
+          default:
+            toast.error("Something went wrong. Please try again.");
+        }
+      } else {
+        toast.error(
+          type === "add"
+            ? "Failed to add funds. Please try again."
+            : "Failed to remove funds. Please try again."
+        );
+      }
     }
   };
 

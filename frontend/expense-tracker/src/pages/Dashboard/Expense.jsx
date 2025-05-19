@@ -80,10 +80,9 @@ const Expense = () => {
       toast.success("Expense added successfully");
       fetchExpenseDetails();
     } catch (error) {
-      console.error(
-        "Error adding expense:",
-        error.response?.data?.message || error.message
-      );
+      const message = error.response?.data?.message || "Something went wrong.";
+      toast.error(message); // Show the backend error as toast
+      console.error("Error adding expense:", message);
     }
   };
 
@@ -137,8 +136,9 @@ const Expense = () => {
       setOpenEditAlert({ show: false, data: null }); // close modal
       fetchExpenseDetails(); // refresh the list
     } catch (error) {
-      console.error("Error updating expense:", error);
-      toast.error("Error updating expense");
+      const message = error.response?.data?.message || "Something went wrong.";
+      toast.error(message); // Show the backend error as toast
+      console.error("Error updating expense:", message);
     }
   };
 
@@ -150,7 +150,7 @@ const Expense = () => {
 
   return (
     <DashboardLayout activeMenu="Expense">
-      <div className="my-5 mx-auto">
+      <div className="mx-auto my-5">
         <div className="grid grid-cols-1 gap-6 my-5">
           <ExpenseOverview
             transactions={expenseData}

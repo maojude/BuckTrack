@@ -51,6 +51,7 @@ const Savings = () => {
       }
     } catch (error) {
       console.log("Something went wrong. Please try again.", error);
+      toast.error("Failed to load saving goals");
     } finally {
       setLoading(false);
     }
@@ -162,7 +163,7 @@ const Savings = () => {
 
   return (
     <DashboardLayout activeMenu="Savings">
-      <div className="my-5 mx-auto">
+      <div className="mx-auto my-5">
         <div className="grid grid-cols-1 gap-6 my-5">
           <SavingsOverview
             totalSavingsAmount={totalSavingsAmount}
