@@ -8,6 +8,7 @@ const {
   removeSavingFunds,
   getSavingTransactions,
   updateSavingGoal,
+  markReminderSent,
 } = require("../controllers/savingsController");
 
 const { protect } = require("../middleware/authMiddleware");
@@ -21,5 +22,6 @@ router.get("/getAllSavingGoals", protect, getAllSavingGoals);
 router.get("/getSavingTransactions/:savingId", protect, getSavingTransactions);
 router.delete("/deleteSavingGoal/:savingId", protect, deleteSavingGoal); // Delete route for savings
 router.put("/updateSavingGoal/:savingId", protect, updateSavingGoal);
+router.patch("/reminder/:savingId", protect, markReminderSent); // patch is for partially updating data (unlike update that updates all of data)
 
 module.exports = router;

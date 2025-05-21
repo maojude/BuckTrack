@@ -138,7 +138,7 @@ const Savings = () => {
       await axiosInstance.put(API_PATHS.SAVINGS.UPDATE_SAVING_GOAL(_id), {
         title,
         targetAmount,
-        targetDate,
+        targetDate: new Date(targetDate).toISOString(), // Ensures consistent comparison
         icon,
       });
 

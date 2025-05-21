@@ -11,9 +11,11 @@ const GoalsList = ({ goals, onExpand, onEdit, onDelete }) => {
         </h5>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {goals?.map((savingGoal) => {
-          const daysLeft = moment(savingGoal.targetDate).diff(moment(), "days");
+          const daysLeft = moment(savingGoal.targetDate)
+            .startOf("day")
+            .diff(moment().startOf("day"), "days");
 
           return (
             <SavingGoalInfoCard

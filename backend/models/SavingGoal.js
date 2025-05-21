@@ -33,6 +33,10 @@ const SavingsSchema = new mongoose.Schema(
       type: [Number],
       default: [],
     },
+    deadlineRemindersSent: {
+      type: [Number], // e.g., [7, 3, 1, 0]
+      default: [],
+    },
   },
   { timestamps: true }
 );

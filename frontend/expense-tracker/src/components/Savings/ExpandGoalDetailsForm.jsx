@@ -113,7 +113,10 @@ const ExpandGoalDetailsForm = ({ goal, setGoal }) => {
     fetchTransactions();
   }, [goal]);
 
-  const daysLeft = moment(goal.targetDate).diff(moment(), "days");
+  const daysLeft = moment(goal.targetDate)
+    .startOf("day")
+    .diff(moment().startOf("day"), "days");
+
   const amountLeft = goal.targetAmount - goal.savedAmount;
   const percentage = Math.min(
     (goal.savedAmount / goal.targetAmount) * 100,

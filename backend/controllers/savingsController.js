@@ -245,19 +245,74 @@ exports.updateSavingGoal = async (req, res) => {
   try {
     const { savingId } = req.params;
 
-    const updated = await SavingGoal.findOneAndUpdate(
-      { _id: savingId, userId: req.user.id }, // looks for the record
-      { ...req.body },
-      { new: true, runValidators: true }
-    );
-
-    if (!updated) {
+    // Fetch the original goal first to compare targetDate
+    const goal = await SavingGoal.findOne({
+      _id: savingId,
+      userId: req.user.id,
+    });
+    if (!goal) {
       return res.status(404).json({ message: "Goal not found" });
     }
 
+    const newTargetDate = req.body.targetDate;
+
+    // Check if targetDate is actually changing
+    const isTargetDateChanging =
+      newTargetDate &&
+      new Date(newTargetDate).toISOString() !== goal.targetDate.toISOString();
+
+    // Apply updates
+    const updatedFields = {
+      ...req.body,
+    };
+
+    // Reset reminders if targetDate changes
+    if (isTargetDateChanging) {
+      updatedFields.deadlineRemindersSent = []; // Reset reminder tracking
+    }
+
+    const updated = await SavingGoal.findOneAndUpdate(
+      { _id: savingId, userId: req.user.id },
+      updatedFields,
+      { new: true, runValidators: true }
+    );
+
     res.status(200).json(updated);
   } catch (error) {
-    console.error("Error updating income: ", error);
+    console.error("Error updating saving goal: ", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.markReminderSent = async (req, res) => {
+  try {
+    const { savingId } = req.params;
+    const { day } = req.body;
+
+    if (![0, 1, 3, 7].includes(day)) {
+      return res.status(400).json({ message: "Invalid reminder day" });
+    }
+
+    const goal = await SavingGoal.findOne({
+      _id: savingId,
+      userId: req.user.id,
+    });
+
+    if (!goal) {
+      return res.status(404).json({ message: "Saving goal not found" });
+    }
+
+    // Avoid duplicates
+    if (!goal.deadlineRemindersSent.includes(day)) {
+      goal.deadlineRemindersSent.push(day);
+      await goal.save();
+    }
+
+    res.status(200).json({
+      message: `Marked ${day}-day reminder as sent for "${goal.title}".`,
+    });
+  } catch (error) {
+    console.error("Error marking reminder as sent:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
