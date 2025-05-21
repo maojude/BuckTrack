@@ -55,7 +55,7 @@ const SavingGoalInfoCard = ({
       <div className="flex items-center gap-2">
         {/* Delete button*/}
         <button
-          className="text-gray-400 transition-opacity opacity-0 cursor-pointer hover:text-red-500 group-hover:opacity-100"
+          className="text-gray-400 transition-opacity opacity-100 md:opacity-0 md:group-hover:opacity-100 cursor-pointer hover:text-red-500"
           onClick={onDelete}
         >
           <LuTrash2 size={18} />
@@ -63,14 +63,14 @@ const SavingGoalInfoCard = ({
 
         {/*Edit button*/}
         <button
-          className="text-gray-400 transition-opacity opacity-0 cursor-pointer hover:text-blue-500 group-hover:opacity-100"
+          className="text-gray-400 transition-opacity opacity-100 md:opacity-0 md:group-hover:opacity-100 cursor-pointer hover:text-blue-500"
           onClick={onEdit}
         >
           <LuPencil size={18} />
         </button>
 
         <button
-          className="text-gray-400 transition-opacity opacity-0 cursor-pointer hover:text-primary group-hover:opacity-100"
+          className="text-gray-400 transition-opacity opacity-100 md:opacity-0 md:group-hover:opacity-100 cursor-pointer hover:text-primary"
           onClick={onExpand}
           title="Expand Goal"
         >
