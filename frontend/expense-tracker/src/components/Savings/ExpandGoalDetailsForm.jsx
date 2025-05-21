@@ -9,9 +9,14 @@ import FundActionForm from "./FundActionForm";
 import { getCurrencySymbol } from "../../utils/helper";
 import { useTheme } from "../../context/ThemeContext";
 import toast from "react-hot-toast";
+import emailjs from "@emailjs/browser";
+import { useContext } from "react";
+import { UserContext } from "../../context/userContext";
 
 const ExpandGoalDetailsForm = ({ goal, setGoal }) => {
   if (!goal) return <p className="text-sm text-gray-400">Loading...</p>;
+
+  const { user } = useContext(UserContext);
 
   const { currency } = useTheme();
   const currencySymbol = getCurrencySymbol(currency);
@@ -28,7 +33,16 @@ const ExpandGoalDetailsForm = ({ goal, setGoal }) => {
         : API_PATHS.SAVINGS.REMOVE_SAVING_FUNDS(goal._id);
 
     try {
-      await axiosInstance.post(endpoint, { amount }); // Send the addition/removal request of funds to backend
+      const response = await axiosInstance.post(endpoint, { amount }); // Send the addition/removal request of funds to backend
+
+      // Send milestone emails if applicable
+      if (type === "add" && response.data.newlyCrossedMilestones?.length > 0) {
+        const goalTitle = response.data.savingGoal.title;
+
+        response.data.newlyCrossedMilestones.forEach((milestone) => {
+          sendMilestoneEmail(milestone, goalTitle);
+        });
+      }
 
       // Refresh transactions
       const txResponse = await axiosInstance.get(
@@ -105,6 +119,28 @@ const ExpandGoalDetailsForm = ({ goal, setGoal }) => {
     (goal.savedAmount / goal.targetAmount) * 100,
     100
   );
+
+  const sendMilestoneEmail = (milestone, goalTitle) => {
+    emailjs
+      .send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID, // replace with your actual EmailJS service ID
+        import.meta.env.VITE_EMAILJS_SAVINGMILESTONE_TEMPLATE_ID, // replace with your actual template ID
+        {
+          user_name: user?.fullName || "User", // optional
+          user_email: user?.email, // you might want to pass this down if it's not available here
+          goal_title: goalTitle,
+          milestone: `${milestone}%`,
+        },
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      )
+      .then(() => {
+        console.log(` Milestone ${milestone}% email sent!`);
+      })
+      .catch((error) => {
+        console.error("EmailJS error:", error);
+        console.log("Failed to send milestone email.");
+      });
+  };
 
   return (
     <div className="space-y-6">

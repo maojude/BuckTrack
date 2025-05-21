@@ -85,6 +85,19 @@ exports.addSavingFunds = async (req, res) => {
 
     // Increase the saved amount in the saving goal
     savingGoal.savedAmount += amount;
+
+    // Check if user passed any new milestones (50%, 75%, 100%)
+    const percentage = (savingGoal.savedAmount / savingGoal.targetAmount) * 100;
+    const milestoneThresholds = [50, 75, 100];
+
+    const newlyCrossedMilestones = milestoneThresholds.filter(
+      (m) => percentage >= m && !savingGoal.milestonesReached.includes(m)
+    );
+
+    // Add them to milestonesReached to prevent duplicate notifications
+    savingGoal.milestonesReached.push(...newlyCrossedMilestones);
+
+    // save changes
     await savingGoal.save();
 
     // Log the saving transaction
@@ -113,9 +126,11 @@ exports.addSavingFunds = async (req, res) => {
       `[AddSavingFunds] New totalBalance: ₱${updatedUser.totalBalance}`
     );
 
-    res
-      .status(201)
-      .json({ message: "Funds added to savings successfully", savingGoal });
+    res.status(201).json({
+      message: "Funds added to savings successfully",
+      savingGoal,
+      newlyCrossedMilestones, // <-- send to frontend for EmailJS
+    });
   } catch (error) {
     console.error("Error adding saving transaction:", error);
     res.status(500).json({ message: "Server error" });

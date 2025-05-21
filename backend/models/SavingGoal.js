@@ -29,6 +29,10 @@ const SavingsSchema = new mongoose.Schema(
       required: true,
     },
     date: { type: Date, default: Date.now },
+    milestonesReached: {
+      type: [Number],
+      default: [],
+    },
   },
   { timestamps: true }
 );
