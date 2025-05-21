@@ -20,6 +20,9 @@ const Login = () => {
 
   const { updateUser } = useContext(UserContext); // to update user data in context
 
+  const [staySignedIn, setStaySignedIn] = useState(false);
+
+
   const navigate = useNavigate();
 
   // Handle Login Form Submit
@@ -53,10 +56,15 @@ const Login = () => {
       const { token, user } = response.data; //extracts from the backend response
 
       if (token) {
-        localStorage.setItem("token", token); // store the token in local storage
+        if (staySignedIn) {
+          localStorage.setItem("token", token); // persists across restarts
+        } else {
+          sessionStorage.setItem("token", token); // clears when tab is closed
+        }
         updateUser(user); // update user data in context
         navigate("/dashboard"); // redirect to dashboard
       }
+
     } catch (error) {
       if (error.response && error.response.data.message) {
         setError(error.response.data.message);
@@ -85,7 +93,11 @@ const Login = () => {
       console.log("Token + User:", token, user);
 
       // Save app's JWT (from backend)
-      localStorage.setItem("token", token); // store the token in local storage
+      if (staySignedIn) {
+        localStorage.setItem("token", token); // persists across restarts
+      } else {
+        sessionStorage.setItem("token", token); // clears when tab is closed
+      }
       console.log("Login successful!");
       updateUser(user);
       console.log("User updated:", user);
@@ -150,6 +162,16 @@ const Login = () => {
 
           {/* Error message set from handleLogin function */}
           {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
+
+          <label className="flex items-center gap-2 mt-2 mb-2 text-sm">
+            <input
+              type="checkbox"
+              checked={staySignedIn}
+              onChange={() => setStaySignedIn(!staySignedIn)}
+              className="accent-violet-600"
+            />
+            Stay signed in
+          </label>
 
           <button type="submit" className="btn-primary">
             LOGIN

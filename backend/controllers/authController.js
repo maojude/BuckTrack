@@ -4,7 +4,7 @@ const { auth } = require("firebase-admin");
 
 //Generate JWT tokens
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "10h" });
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1h" });
 };
 
 //Register a new user

@@ -19,7 +19,8 @@ const SideMenu = ({ activeMenu }) => {
   };
 
   const handleLogout = () => {
-    localStorage.clear();
+    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
     clearUser();
     navigate("/login");
   };
@@ -27,7 +28,7 @@ const SideMenu = ({ activeMenu }) => {
   return (
     <div className="w-64 h-[calc(100vh-61px)] border-r border-gray-200/50 p-5 sticky top-[61px] z-20 secondary-background dark:border-[#1c1c24]">
       <div className="flex flex-col items-center justify-center gap-3 mt-3 mb-7">
-        <h5 className="secondary-background font-medium leading-6">
+        <h5 className="font-medium leading-6 secondary-background">
           {" "}
           {/*text-gray-950*/}
           {user?.fullName || ""}

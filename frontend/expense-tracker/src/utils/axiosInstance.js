@@ -14,7 +14,8 @@ const axiosInstance = axios.create({
 // Request interceptor to automatically add the token to the headers of every request
 axiosInstance.interceptors.request.use(
     (config) => {
-        const accessToken = localStorage.getItem("token");
+        const accessToken = localStorage.getItem("token") || sessionStorage.getItem("token");
+
         if(accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`; // adds the token to the headers of the request
         }
